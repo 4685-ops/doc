@@ -72,5 +72,13 @@ public function __construct()
         ]);
     }
 
+
+
+```
+
+# 数据库操作
+
+```
+php artisan make:migration create_order_table
 ```
 

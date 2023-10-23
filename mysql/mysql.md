@@ -62,45 +62,45 @@
 
 ### 8.文件系统 （mac windows linux）
 
-# mysql存储引擎特点
+# [mysql存储引擎特点](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#mysql存储引擎特点)
 
+## [**1. InnoDB**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#1-innodb)
 
-
-## **1. InnoDB**
-
-### **(1). 介绍**
+### [**(1). 介绍**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#1-介绍)
 
 **InnoDB是一种兼顾高可靠性和高性能的通用存储引擎，在MySQL 5.5之后，InnoDB是默认的MySQL存储引擎。**
 
-### **(2). 特点**
+### [**(2). 特点**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#2-特点)
 
 - **DML操作遵循ACID模型，支持事务；**
 - **行级锁，提高并发访问性能；**
 - **支持外键FOREIGN KEY约束，保证数据的完整性和正确性；**
 
-### **(3). 文件**
+### [**(3). 文件**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#3-文件)
 
 **xxx.ibd：xxx代表的是表名，innoDB引擎的每张表都会对应这样一个表空间，存储该表的表结构（frm-早期的、sdi-新版的）、数据和索引。**
 
 **参数：innodb_file_per_table**
 
-```sql
+```
 show variables like 'innodb_file_per_table';
 ```
 
-![img](https://pic1.zhimg.com/80/v2-9aaab20188fd46224f942d8fecceee9d_720w.webp?source=2c26e567)
+
+
+[![img](https://camo.githubusercontent.com/ed714bbdcc5c440e29b3e6173d286fec9bf918e1fd33c4de3ebcf69f533a45e6/68747470733a2f2f706963312e7a68696d672e636f6d2f38302f76322d39616161623230313838666434363232346639343264386665636365656539645f373230772e776562703f736f757263653d3263323665353637)](https://camo.githubusercontent.com/ed714bbdcc5c440e29b3e6173d286fec9bf918e1fd33c4de3ebcf69f533a45e6/68747470733a2f2f706963312e7a68696d672e636f6d2f38302f76322d39616161623230313838666434363232346639343264386665636365656539645f373230772e776562703f736f757263653d3263323665353637)
 
 **如果该参数开启，代表对于InnoDB引擎的表，每一张表都对应一个ibd文件。我们直接打开MySQL的数据存放目录，这个目录下有很多文件夹，不同的文件夹代表不同的数据库，我们直接打开[yun3k文件夹](https://www.zhihu.com/search?q=yun3k文件夹&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})。**
 
-![img](https://pic1.zhimg.com/80/v2-a94e50f591685791f94628f90dcde1cf_720w.webp?source=2c26e567)
+[![img](https://camo.githubusercontent.com/75f2428eb3f778bb6e67b102e03f68aea8548f0894fd22b114d44c9e903171d8/68747470733a2f2f706963312e7a68696d672e636f6d2f38302f76322d61393465353066353931363835373931663934363238663930646364653163665f373230772e776562703f736f757263653d3263323665353637)](https://camo.githubusercontent.com/75f2428eb3f778bb6e67b102e03f68aea8548f0894fd22b114d44c9e903171d8/68747470733a2f2f706963312e7a68696d672e636f6d2f38302f76322d61393465353066353931363835373931663934363238663930646364653163665f373230772e776562703f736f757263653d3263323665353637)
 
 **可以看到里面有很多的idb文件，每一个ibd文件就对应一张表，比如：我们有一张表account，就会有这样一个account.ibd文件，而在这个[ibd文件](https://www.zhihu.com/search?q=ibd文件&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})中不仅存放表结构、数据、还会存放该表对应的索引信息。而该文件是基于[二进制](https://www.zhihu.com/search?q=二进制&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})存储的，不能直接基于记事本打开，我们可以使用mysql提供的一个指令[ibd2sdi](https://www.zhihu.com/search?q=ibd2sdi&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})，通过该指令就可以从ibd文件中提取sdi信息，而[sdi数据字典](https://www.zhihu.com/search?q=sdi数据字典&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})信息中就包含该表的表结构。**
 
-![img](https://pic1.zhimg.com/80/v2-86e34aa283c603645f8abc29a3968a65_720w.webp?source=2c26e567)
+[![img](https://camo.githubusercontent.com/dbcf4e73556e52183db7be4907fb1438af9ef59f1773e46cace427827297cae8/68747470733a2f2f706963312e7a68696d672e636f6d2f38302f76322d38366533346161323833633630333634356638616263323961333936386136355f373230772e776562703f736f757263653d3263323665353637)](https://camo.githubusercontent.com/dbcf4e73556e52183db7be4907fb1438af9ef59f1773e46cace427827297cae8/68747470733a2f2f706963312e7a68696d672e636f6d2f38302f76322d38366533346161323833633630333634356638616263323961333936386136355f373230772e776562703f736f757263653d3263323665353637)
 
-### **(4). 逻辑[存储结构](https://www.zhihu.com/search?q=存储结构&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})**
+### [**(4). 逻辑**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#4-逻辑存储结构)**[存储结构](https://www.zhihu.com/search?q=存储结构&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})**
 
-![img](https://pica.zhimg.com/80/v2-4114ae16db94b406f961f9dd2f3d04be_720w.webp?source=2c26e567)
+[![img](https://camo.githubusercontent.com/6e0a9a3cfaf0a5f84036b53cd29d09c38245a8927c913c66255117404fbb869f/68747470733a2f2f706963612e7a68696d672e636f6d2f38302f76322d34313134616531366462393462343036663936316639646432663364303462655f373230772e776562703f736f757263653d3263323665353637)](https://camo.githubusercontent.com/6e0a9a3cfaf0a5f84036b53cd29d09c38245a8927c913c66255117404fbb869f/68747470733a2f2f706963612e7a68696d672e636f6d2f38302f76322d34313134616531366462393462343036663936316639646432663364303462655f373230772e776562703f736f757263653d3263323665353637)
 
 - **表空间：InnoDB存储引擎逻辑结构的最高层，ibd文件其实就是表空间文件，在表空间中可以包含多个[Segment段](https://www.zhihu.com/search?q=Segment段&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})。**
 - **段：表空间是由各个段组建的，常见的段有数据段、[索引段](https://www.zhihu.com/search?q=索引段&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})、回滚段等。InnoDB中对于段的管理，都是引擎自身完成，不需要人为对其控制，一个段中包含多个区。**
@@ -108,13 +108,13 @@ show variables like 'innodb_file_per_table';
 - **页：页是组成区的最小单元，页也是InnoDB存储引擎磁盘管理的最小单元，每个页的大小默认为16KB。为了保证页的连续性，InnoDB存储引擎每次从磁盘申请4-5个区。**
 - **行：InnoDB存储引擎是[面向行](https://www.zhihu.com/search?q=面向行&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})的，也就是说数据是按行进行存放的，在每一行中除了定义表时所指定的字段以外，还包含两个隐藏字段(后面会详细介绍)。**
 
-## **2. MyISAM**
+## [**2. MyISAM**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#2-myisam)
 
-### **(1). 介绍**
+### [**(1). 介绍**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#1-介绍-1)
 
 **MyISAM是MySQL早期的默认存储引擎。**
 
-### **(2). 特点**
+### [**(2). 特点**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#2-特点-1)
 
 **不支持事务，不支持外键**
 
@@ -122,7 +122,7 @@ show variables like 'innodb_file_per_table';
 
 **访问速度快**
 
-### **(3). 文件**
+### [**(3). 文件**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#3-文件-1)
 
 **xxx.sdi：存储表结构信息**
 
@@ -130,25 +130,25 @@ show variables like 'innodb_file_per_table';
 
 **xxx.MYI：存储索引**
 
-![img](https://picx.zhimg.com/80/v2-1fdb75a8ca1688c32c945c576b6c1bcf_720w.webp?source=2c26e567)
+[![img](https://camo.githubusercontent.com/07e733a6fc34b07c130d7073c7ed399a60e4cbc8fd4be827141a453dd0fd786f/68747470733a2f2f706963782e7a68696d672e636f6d2f38302f76322d31666462373561386361313638386333326339343563353736623663316263665f373230772e776562703f736f757263653d3263323665353637)](https://camo.githubusercontent.com/07e733a6fc34b07c130d7073c7ed399a60e4cbc8fd4be827141a453dd0fd786f/68747470733a2f2f706963782e7a68696d672e636f6d2f38302f76322d31666462373561386361313638386333326339343563353736623663316263665f373230772e776562703f736f757263653d3263323665353637)
 
-## 3. Memory
+## [3. Memory](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#3-memory)
 
-### **(1). 介绍**
+### [**(1). 介绍**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#1-介绍-2)
 
 **Memory引擎的表数据是存储在内存中的，由于受到硬件问题或断电问题的影响，只能将这些表作为[临时表](https://www.zhihu.com/search?q=临时表&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})或缓存使用。**
 
-## **(2). 特点**
+## [**(2). 特点**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#2-特点-2)
 
 **内存存放**
 
 **[hash索引](https://www.zhihu.com/search?q=hash索引&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})（默认）**
 
-## **(3). 文件**
+## [**(3). 文件**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#3-文件-2)
 
 **xxx.sdi：存储表结构信息**
 
-## **4. InnoDB、MyISAM和Memory的区别及特点**
+## [**4. InnoDB、MyISAM和Memory的区别及特点**](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#4-innodbmyisam和memory的区别及特点)
 
 | 特点                                                         | InnoDB             | MyISAM | Memory |
 | ------------------------------------------------------------ | ------------------ | ------ | ------ |
@@ -163,16 +163,13 @@ show variables like 'innodb_file_per_table';
 | 批量插入速度                                                 | 低                 | 高     | 高     |
 | 支持外键                                                     | 支持               | -      |        |
 
-## 四. 存储引擎的选择
+## [四. 存储引擎的选择](https://github.com/4685-ops/doc/blob/main/mysql/mysql.md#四-存储引擎的选择)
 
 **在选择存储引擎时，应该根据应用系统的特点选择合适的存储引擎。对于复杂的应用系统，还可以根据实际情况选择多种存储引擎进行结合。**
 
 - **InnoDB：是Mysql的默认存储引擎，支持事务、外键。如果应用对事务的完整性有比较高的要求，在并发条件下要求数据的一致性，数据操作除了插入和查询之外，还包含很多的更新、删除操作，那么[InnoDB存储引擎](https://www.zhihu.com/search?q=InnoDB存储引擎&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A3104482752})是比较合适的选择。**
 - **MyISAM：如果应用是以读操作和插入操作为主，只有很少的更新和删除操作，并且对事务的完整性、并发性要求不是很高，那么选择这个存储引擎是非常合适的。**
 - **Memory：将所有数据保存在内存中，访问速度快，通常用于临时表及缓存。MEMORY的缺陷就是对表的大小有限制，太大的表无法缓存在内存中，而且无法保障数据的安全。**
-
-![image-20231023194833722](C:\Users\leshu\AppData\Roaming\Typora\typora-user-images\image-20231023194833722.png)
-
 ![image-20231023194846145](C:\Users\leshu\AppData\Roaming\Typora\typora-user-images\image-20231023194846145.png)
 
 ![image-20231023194900707](C:\Users\leshu\AppData\Roaming\Typora\typora-user-images\image-20231023194900707.png)
